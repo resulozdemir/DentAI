@@ -1,0 +1,241 @@
+/* static/css/main.css */
+:root {
+    --primary-color: #ff7200;
+    --primary-hover-color: #e56600;
+    --danger-color: #d9534f;
+    --danger-hover-color: #c9302c;
+    --delete-color: #dc3545;
+    --cancel-color: #6c757d;
+    
+    --text-color: #333;
+    --background-gradient-start: #f0f0f0;
+    --background-gradient-end: #d0d0d0;
+    --card-background: white;
+    --border-color-light: #ddd;
+    --border-color-very-light: #eee;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --shadow-hover-color: rgba(0, 0, 0, 0.15);
+    --flash-success-bg: #d4edda;
+    --flash-success-text: #155724;
+
+    --font-family: Arial, sans-serif;
+    --base-font-size: 14px;
+    --title-font-size: 36px;
+    --modal-title-font-size: 24px;
+    --delete-button-font-size: 16px;
+
+    --border-radius: 4px;
+    --border-radius-lg: 8px;
+    --border-radius-circle: 50%;
+
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 10px;
+    --spacing-lg: 15px;
+    --spacing-xl: 20px;
+    --spacing-xxl: 30px;
+    --spacing-xxxl: 40px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+}
+
+body {
+    background: linear-gradient(to bottom, var(--background-gradient-start), var(--background-gradient-end));
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--text-color);
+    padding: var(--spacing-xxxl) var(--spacing-xl);
+    position: relative; /* Needed for absolute positioning context of flash messages if not fixed */
+}
+
+.container { /* Genel içerik sarmalayıcı - ARTIK TAM GENİŞLİK */
+    width: 100%;
+    padding-left: var(--spacing-xl); /* Kenar boşlukları için padding ekleyebiliriz */
+    padding-right: var(--spacing-xl);
+}
+
+/* İstenirse, ortalanmış ve max-width içeren ayrı bir sınıf oluşturulabilir */
+.container-centered {
+    width: 100%;
+    max-width: 1200px; 
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+}
+
+.btn {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-size: var(--base-font-size);
+    transition: background-color 0.3s;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover-color);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: var(--danger-hover-color);
+}
+
+.btn-secondary {
+    background-color: #555; /* Gri tonu */
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #333; /* Koyu gri */
+}
+
+.btn-info { /* New class for about button */
+    background-color: var(--primary-color); /* Use primary or a different info color */
+    color: white;
+}
+
+.btn-info:hover {
+    background-color: var(--primary-hover-color);
+}
+
+.flash-messages {
+    width: 100%;
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Flash Messages Styling */
+.flash-messages-container { /* New wrapper for positioning */
+    position: fixed; /* Fixed position at the top */
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    width: 100%;
+    max-width: 600px; /* Max width for the message */
+    z-index: 1050; /* Ensure it's above most elements */
+    padding-top: var(--spacing-lg); /* Space from top */
+    pointer-events: none; /* Allow clicks through the container */
+}
+
+.flash-message {
+    /* background-color: var(--flash-success-bg); */ /* Moved to specific classes */
+    /* color: var(--flash-success-text); */ /* Moved to specific classes */
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-md);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    opacity: 0;
+    transform: translateY(-50px);
+    animation: slideDownFadeIn 0.5s ease-out forwards;
+    pointer-events: all; /* Enable pointer events for the message itself */
+    display: flex; /* Allow button alignment */
+    justify-content: space-between; /* Space between text and close button */
+    align-items: center;
+}
+
+.flash-message.fade-out {
+    animation: slideUpFadeOut 0.5s ease-in forwards;
+}
+
+/* Categories for different message types */
+.flash-message.flash-success {
+    background-color: var(--flash-success-bg, #d4edda);
+    color: var(--flash-success-text, #155724);
+    border-left: 5px solid var(--flash-success-text, #155724);
+}
+
+.flash-message.flash-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border-left: 5px solid #856404;
+}
+
+.flash-message.flash-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 5px solid #721c24;
+}
+
+.flash-message.flash-info {
+    background-color: #cce5ff;
+    color: #004085;
+    border-left: 5px solid #004085;
+}
+
+.flash-close-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0.6;
+    padding: 0 0 0 var(--spacing-md);
+    margin-left: var(--spacing-md);
+}
+
+.flash-close-btn:hover {
+    opacity: 1;
+}
+
+/* Keyframes for animations */
+@keyframes slideDownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUpFadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+}
+
+/* Responsive Genel Ayarlar */
+@media (max-width: 1200px) {
+    /* Gerekirse genel responsive ayarları */
+}
+
+@media (max-width: 900px) {
+   /* Gerekirse genel responsive ayarları */
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+    .btn {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: calc(var(--base-font-size) - 1px);
+    }
+} 

@@ -1,0 +1,114 @@
+/* static/css/auth.css */
+
+/* Shared container for centering auth forms */
+.auth-page-container { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh; /* Adjust as needed */
+    /* Inherits background from body */
+}
+
+/* Base styles for auth form containers */
+.register-container,
+.forgot-password-container,
+.reset-password-container {
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+    background-color: var(--card-background);
+    padding: var(--spacing-xxxl);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+/* Headings in auth forms */
+.register-container h1,
+.forgot-password-container h1,
+.reset-password-container h1 {
+    color: var(--text-color);
+    font-size: var(--title-font-size);
+    margin-bottom: var(--spacing-xxxl); /* Adjusted margin */
+}
+
+/* Instructions text */
+.forgot-password-container .instructions,
+.reset-password-container .instructions {
+    margin: var(--spacing-xl) 0 var(--spacing-xxxl);
+    color: var(--text-color);
+    line-height: 1.6;
+    font-size: calc(var(--base-font-size) + 2px); /* 16px */
+    text-align: center;
+}
+
+/* Form groups */
+.register-container .form-group,
+.forgot-password-container .form-group,
+.reset-password-container .form-group {
+    margin-bottom: var(--spacing-xl); /* Unified margin */
+}
+
+/* Specific alignments */
+.register-container .form-group { text-align: right; }
+.forgot-password-container .form-group { text-align: center; }
+.reset-password-container .form-group { text-align: left; }
+
+/* Labels */
+.register-container label {
+    display: inline-block;
+    width: 30%; 
+    margin-right: var(--spacing-md);
+    text-align: right;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.forgot-password-container label,
+.reset-password-container label {
+    display: block;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+/* Inputs */
+.register-container input,
+.forgot-password-container input,
+.reset-password-container input {
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius);
+    font-size: calc(var(--base-font-size) + 2px); /* 16px */
+    background-color: white;
+}
+
+.register-container input { width: 65%; }
+.forgot-password-container input { width: 100%; }
+.reset-password-container input { width: 100%; }
+
+/* Button containers */
+.register-container .button-container {
+    margin-top: var(--spacing-xxl);
+    text-align: center;
+}
+
+/* Message/Alert styling (specific to reset_password for now) */
+.reset-password-container .messages {
+    background-color: #f8d7da; /* Error/warning background */
+    color: #721c24;
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    border-radius: var(--border-radius);
+    text-align: left;
+    border: 1px solid #f5c6cb;
+}
+
+.reset-password-container .messages ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.reset-password-container .messages li {
+     margin-bottom: var(--spacing-sm);
+} 

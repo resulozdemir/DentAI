@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}ISTÜN - DentAI | Analiz Sonuçları{% endblock %}
+
+{% block head_extra %}
+    {# Link to the specific CSS file for this page #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/results.css') }}">
+{% endblock %}
+
+{% block content %}
+    {# Flash messages handled by base.html #}
+    <h1 class="page-title">Sonuçlar</h1>
+    
+    <div class="results-container">
+        <div class="left-column">
+            <div class="patient-info" aria-labelledby="patientInfoHeading">
+                <h2 id="patientInfoHeading" class="visually-hidden">Hasta Bilgileri</h2>
+                <p><strong>AD SOYAD :</strong> {{ patient_info.name }}</p>
+                <p><strong>TC.NO :</strong> {{ patient_info.tc_no }}</p>
+                {% if patient_info.age %}
+                <p><strong>YAŞ :</strong> {{ patient_info.age }}</p>
+                {% endif %}
+                {% if patient_info.birth_date %}
+                <p><strong>DOĞUM TARİHİ :</strong> {{ patient_info.birth_date }}</p>
+                {% endif %}
+                {% if patient_info.gender %}
+                <p><strong>CİNSİYET :</strong> {{ patient_info.gender }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="xray-container">
+                <img class="xray-image" src="data:image/jpeg;base64,{{ results.image_base64 }}" alt="{{ patient_info.name }} - Analiz Edilen X-Ray Taraması">
+            </div>
+            
+            <section class="description" aria-labelledby="descriptionHeading">
+                <h3 id="descriptionHeading">Tespit Edilen Diş Türleri:</h3>
+                
+                {% if 'PALATAL' in results.tooth_types %}
+                <div class="description-item">
+                    <p><strong>PALATAL:</strong> Genellikle üst çenede damak tarafında gömülü kalan dişleri tanımlar. Özellikle köpek dişleri, üst çenede sıkça, damak tarafında gömülü kalabilir. Bu durumda diş, normal çıkması gereken konumdan daha içeride, damağa yakın bir yerde kalır.</p>
+                </div>
+                {% endif %}
+                
+                {% if 'BUKKAL' in results.tooth_types %}
+                <div class="description-item">
+                    <p><strong>BUKKAL:</strong> Genellikle yanaklar tarafında, dış tarafta gömülü kalan dişleri tanımlar. Bu dişler, dental arkın dışında, yanağa yakın bir konumda bulunurlar. Bu pozisyon, dişin çene kemiğinin dışına doğru yöneldiğini gösterir.</p>
+                </div>
+                {% endif %}
+                
+                {% if results.tooth_types|length == 0 %}
+                <div class="description-item">
+                    <p>Gömülü diş bulunamadı veya tanımlanamadı.</p>
+                </div>
+                {% endif %}
+                
+                <h3>Diş Konumları:</h3>
+                {% if 'SOL' in results.tooth_locations %}
+                <div class="description-item">
+                    <p><strong>SOL:</strong> Dişler çenenin sol tarafında gömülü kalmıştır.</p>
+                </div>
+                {% endif %}
+                
+                {% if 'SAĞ' in results.tooth_locations %}
+                <div class="description-item">
+                    <p><strong>SAĞ:</strong> Dişler çenenin sağ tarafında gömülü kalmıştır.</p>
+                </div>
+                {% endif %}
+            </section>
+        </div>
+        
+        <aside class="right-column">
+            <article class="result-item">
+                <div class="result-icon">
+                    <img src="{{ url_for('static', filename='images/tooth.png') }}" alt="" aria-hidden="true">
+                </div>
+                <div class="result-text">
+                    <span>GÖMÜLÜ DİŞ TÜRÜ : </span>
+                    <span class="result-value">{{ results.tooth_type if results.tooth_type else 'N/A' }}</span>
+                </div>
+            </article>
+
+            <article class="result-item">
+                <div class="result-icon">
+                     <img src="{{ url_for('static', filename='images/scaling.png') }}" alt="" aria-hidden="true">
+                </div>
+                <div class="result-text">
+                    <span>GÖMÜLÜ DİŞ SAYISI : </span>
+                    <span class="result-value">{{ results.tooth_count }}</span>
+                </div>
+            </article>
+
+            <article class="result-item">
+                <div class="result-icon">
+                     <img src="{{ url_for('static', filename='images/teeth.png') }}" alt="" aria-hidden="true">
+                </div>
+                <div class="result-text">
+                    <span>GÖMÜLÜ DİŞ KONUMU : </span>
+                    <span class="result-value">{{ results.tooth_location if results.tooth_location else 'N/A' }}</span>
+                </div>
+            </article>
+            
+            <button class="print-button" onclick="window.print()">YAZDIR</button>
+        </aside>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {# Add any page-specific JavaScript for results page if needed #}
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}ISTÜN - DentAI | Geçmiş Hasta Kayıtları{% endblock %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/records.css') }}">
+{% endblock %}
+
+{% block content %}
+    <header class="header">
+        <h1 class="header-title">Geçmiş Hasta Kayıtları</h1>
+        <div class="header-actions">
+            <a href="{{ url_for('patient_form') }}" class="btn btn-primary">Hasta Kayıt</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">Çıkış Yap</a>
+        </div>
+    </header>
+    
+    <section class="content">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash-message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <div class="records-container">
+            {% if records %}
+                {% for record in records %}
+                    <article class="record-card" data-id="{{ record.id }}">
+                        <div class="xray-container">
+                            <img class="xray-image" src="data:image/jpeg;base64,{{ record.image_base64 }}" alt="{{ record.patient_name }} - X-Ray Görüntüsü">
+                        </div>
+                        <div class="patient-info">
+                            <p><strong>AD SOYAD:</strong> {{ record.patient_name }}</p>
+                            <p><strong>TC NO:</strong> {{ record.patient_tc }}</p>
+                            <p><strong>TARİH:</strong> {{ record.xray_date_str }}</p>
+                            <p><strong>DİŞ TİPİ:</strong> {{ record.tooth_type }}</p>
+                            <p><strong>DİŞ SAYISI:</strong> {{ record.tooth_count }}</p>
+                            <p><strong>KONUM:</strong> {{ record.tooth_location }}</p>
+                            <button class="btn btn-danger delete-btn" data-delete-url="{{ url_for('delete_record', result_id=record.id) }}">Sil</button>
+                        </div>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <div class="no-records">
+                    <h2>Kayıt Bulunamadı</h2>
+                    <p>Henüz hiçbir hasta kaydı bulunmamaktadır.</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+    
+    <!-- Silme Onay Modalı -->
+    <div id="deleteModal" class="delete-modal" 
+         role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" style="display: none;">
+        <div class="delete-modal-content">
+            <h2 id="deleteModalTitle" class="delete-modal-title">Kaydı Sil</h2>
+            <p>Bu kaydı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</p>
+            <div class="delete-modal-actions">
+                <button type="button" id="cancelDeleteBtn" class="modal-button cancel">İptal</button>
+                <button type="button" id="confirmDeleteBtn" class="modal-button confirm">Sil</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/records.js') }}"></script>
+{% endblock %}

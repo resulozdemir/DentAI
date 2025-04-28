@@ -1,0 +1,46 @@
+# Python Önbelleği
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Sanal Ortamlar
+venv/
+ENV/
+env/
+ENV/
+.venv/
+
+# Ortam Değişkenleri ve Hassas Bilgiler
+#.env
+#.env.*
+#!*.env.example
+
+# OAuth Token / Secret Dosyaları (Eğer kök dizindeyse)
+client_secrets.json
+token.json
+
+# Yüklenen Kullanıcı Dosyaları
+uploads/
+
+# İşletim Sistemi Dosyaları
+.DS_Store
+Thumbs.db
+
+# IDE / Editör Dosyaları
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Flask instance folder (Eğer kullanılıyorsa)
+/instance/
+
+# Testler (varsa)
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build artifacts
+/dist/
+/build/
+*.egg-info/ 

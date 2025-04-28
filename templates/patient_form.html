@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}ISTÜN - DentAI | Hasta Bilgileri{% endblock %}
+
+{% block head_extra %}
+    {# Link to the specific CSS file for this page #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/patient_form.css') }}">
+{% endblock %}
+
+{% block content %}
+    {# Override the default body behavior from base.html by using a full-height container #}
+    <div class="patient-form-container">
+        {# Logout button moved inside the right panel for better context if needed #}
+        {# <a href="{{ url_for('logout') }}" class="logout-btn">Çıkış Yap</a> #}
+        
+        <div class="left-panel">
+            <img src="{{ url_for('static', filename='images/doctor1.jpg') }}" alt="Diş röntgenini inceleyen doktor">
+        </div>
+        <div class="right-panel">
+            {# Added logout button here, positioned absolutely via CSS #}
+             <a href="{{ url_for('logout') }}" class="logout-btn">Çıkış Yap</a>
+             
+            <h1>Hasta Bilgileri</h1>
+            
+            {# Flash messages are handled by base.html, but if specific styling needed, keep this alert div #}
+            {# Check if .alert styling is significantly different from .flash-message #}
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+            <form action="{{ url_for('analyze') }}" method="post" enctype="multipart/form-data" autocomplete="on">
+                <div class="form-group">
+                    <label for="name">AD SOYAD :</label>
+                    <input type="text" id="name" name="name" required autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <label for="tc_no">TC NO :</label>
+                    <input type="text" id="tc_no" name="tc_no" required pattern="[0-9]{11}" title="TC Kimlik numarası 11 haneli olmalıdır" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="age">YAŞ :</label>
+                    <input type="number" id="age" name="age" required min="1" max="120" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="birth_date">DOĞUM TARİHİ :</label>
+                    <input type="date" id="birth_date" name="birth_date" required autocomplete="bday">
+                </div>
+                <div class="form-group">
+                    <label for="gender">CİNSİYET :</label>
+                    <select id="gender" name="gender" required autocomplete="sex">
+                        <option value="" disabled selected>Seçiniz</option>
+                        <option value="Erkek">Erkek</option>
+                        <option value="Kadın">Kadın</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="xray_image">MR GÖRÜNTÜSÜ :</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="xray_image" name="xray_image" required accept="image/*">
+                    </div>
+                </div>
+                <div class="form-actions">
+                     {# Added btn class for consistency #}
+                    <a href="{{ url_for('previous_records') }}" class="btn btn-secondary">GEÇMİŞ KAYITLAR</a>
+                    <button type="submit" class="btn btn-primary">SİSTEME YÜKLE</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {# Add any page-specific JavaScript here if needed #}
+{% endblock %}

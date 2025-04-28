@@ -1,0 +1,623 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+}
+
+.container, .login-container, .about-container {
+    width: 100%;
+    max-width: 1200px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Override max-width specifically for login container */
+.login-container {
+    max-width: none; /* Remove the max-width limit */
+}
+
+h1 {
+    color: #0d3b66;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+h2 {
+    color: #0d3b66;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+/* Header with Logo and Navigation */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+.logo-area {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #0d3b66;
+}
+
+.istun-logo {
+    color: #c1121f;
+    font-style: italic;
+    font-weight: 900;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-about {
+    background-color: #ff6b35;
+    margin-right: 0;
+}
+
+/* Login Page */
+.login-container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width: 100%;
+    /* Removed styles handled by body or unnecessary */
+    /* max-width: none; */
+    /* box-shadow: none; */
+    /* border-radius: 0; */
+    /* background: none; */
+}
+
+.left-side {
+    flex: 1;
+    background: linear-gradient(135deg, #e0e0e0, #9e9e9e);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.login-content {
+    max-width: 460px;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.login-header {
+    margin-bottom: 4rem;
+}
+
+.login-header h1 {
+    color: #0d3b66;
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+    text-align: left;
+    font-weight: normal;
+}
+
+.login-header h2 {
+    color: #0d3b66;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-align: left;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.right-side {
+    flex: 1;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    /* background image set inline in index.html */
+}
+
+.nav-button {
+    position: absolute;
+    top: var(--spacing-xl); /* Use variable */
+    right: var(--spacing-xl); /* Use variable */
+}
+
+/* Removed .btn-about as it's now .btn .btn-info in main.css */
+
+/* Form Styles Specific to Login */
+.login-content .form-group { /* More specific selector */
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.login-content .form-group label {
+    width: 150px;
+    text-align: right;
+    margin-right: 10px;
+    font-weight: bold;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.login-content .form-group input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #fff; /* Consider var(--border-color-light) */
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #fff; /* Use var(--card-background)? */
+}
+
+.login-content .form-actions { /* More specific selector */
+    display: flex;
+    justify-content: center;
+    margin-top: 2.5rem;
+}
+
+/* Use .btn .btn-primary from main.css */
+/* Remove duplicate .btn-primary styles */
+
+.forgot-password {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.forgot-password a {
+    color: #555;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.register-link a {
+    color: #0d3b66;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+/* Removed other page styles (registration, about, results etc.) */
+/* Removed media queries if they are general, keep if login-specific */
+
+.alert {
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--border-radius);
+    border: 1px solid transparent;
+    /* Specific category styles might be needed if overriding main.css */
+}
+
+.alert-info { /* Example category */
+     color: #004085;
+     background-color: #cce5ff;
+     border-color: #b8daff;
+}
+
+.alert-success {
+     color: var(--flash-success-text, #155724);
+     background-color: var(--flash-success-bg, #d4edda);
+     border-color: #c3e6cb;
+}
+
+.alert-warning {
+     color: #856404;
+     background-color: #fff3cd;
+     border-color: #ffeeba;
+}
+
+.alert-danger {
+     color: #721c24;
+     background-color: #f8d7da;
+     border-color: #f5c6cb;
+}
+
+/* Registration Page Styles */
+.registration-panel {
+    width: 100%;
+    padding: 2rem;
+    margin: 0 auto;
+    max-width: 600px;
+    background: linear-gradient(135deg, #e2e2e2, #9e9e9e);
+    border-radius: 5px;
+}
+
+.registration-form {
+    background-color: transparent;
+    padding: 1.5rem;
+}
+
+.registration-form h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+    font-size: 2rem;
+}
+
+.registration-form .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.registration-form .form-group label {
+    width: 120px;
+    text-align: right;
+    margin-right: 1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.registration-form .form-group input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #fff;
+}
+
+.registration-form .form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.registration-form .btn-primary {
+    background-color: #ff6b35;
+    padding: 0.75rem 2.5rem;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+}
+
+.login-footer, .page-footer {
+    padding: 1rem;
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* About Us Page Styles */
+.about-container {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: #f5f5f5;
+}
+
+.about-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.istun-logo {
+    font-size: 2.5rem;
+    color: #c1121f;
+    font-style: italic;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+}
+
+.university-name {
+    color: #0d3b66;
+    font-size: 1rem;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.about-content {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+}
+
+.contact-info, .team-info {
+    flex: 1;
+    min-width: 300px;
+    padding: 1rem;
+}
+
+.contact-info h2, .team-info h2 {
+    color: #0d3b66;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ff6b35;
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.contact-info p, .team-info p {
+    margin-bottom: 0.7rem;
+    line-height: 1.6;
+}
+
+.contact-info a {
+    color: #0d3b66;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+    color: #ff6b35;
+}
+
+.about-footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #ddd;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #0d3b66;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    background-color: #0d3b66;
+}
+
+.social-icon img {
+    width: 20px;
+    height: 20px;
+}
+
+.back-button {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+/* Patient Form Page */
+.content-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.content-wrapper .left-panel, .content-wrapper .right-panel {
+    padding: 2rem;
+}
+
+/* Results Page */
+.results-container {
+    padding: 2rem;
+}
+
+.results-content {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+    gap: 2rem;
+}
+
+.patient-info {
+    flex: 2;
+    min-width: 300px;
+}
+
+.info-section {
+    margin-bottom: 1rem;
+}
+
+.info-section p {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.xray-image {
+    margin: 1.5rem 0;
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.xray-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.tooth-description {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.results-section {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.result-item {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.result-item .icon {
+    width: 60px;
+    height: 60px;
+    background-color: #ff6b35;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 1rem;
+}
+
+.result-item .icon img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}
+
+.result-info h3 {
+    color: #0d3b66;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.result-info p {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #ff6b35;
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+/* Alert messages */
+.alert {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+    text-align: center;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .login-container, .content-wrapper {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .left-panel {
+        height: 300px;
+    }
+    
+    .right-panel {
+        padding: 1.5rem;
+    }
+    
+    .login-form {
+        padding: 0;
+    }
+    
+    .results-content {
+        flex-direction: column;
+    }
+}
+
+/* Print styles */
+@media print {
+    body {
+        background: white;
+    }
+    
+    .container, .login-container {
+        box-shadow: none;
+        max-width: 100%;
+    }
+    
+    .actions, .page-footer {
+        display: none;
+    }
+}
+
+/* Styles specific to index.html - MOVED FROM INDEX.HTML */
+/* Override base body padding for full screen */
+body {
+    padding: 0 !important; /* Remove padding from base.html */
+    display: flex; /* Ensure flex is applied if needed for login layout */
+    min-height: 100vh;
+    background-color: #f5f5f5; /* Match patient_form background? Or keep original? */
+}
+.login-container {
+    /* Ensure it takes full width/height if body is flex */
+     display: flex;
+     width: 100%;
+     /* height: 100vh; might not be needed if body has min-height */
+}
+.doctor-bg {
+    /* URL'i doğrudan CSS'e ekleyemeyiz, bu HTML'de kalmalı veya farklı bir yöntem kullanılmalı */
+    /* background-image: url("{{ url_for('static', filename='images/doctor2.jpg') }}"); */
+    /* Geçici Çözüm: Arka plan resmi için ayrı bir id/class kullanılabilir ve HTML'de bu set edilebilir */
+    /* YA DA en iyisi: .right-side'a doğrudan HTML içinden style attribute ile eklenmeli */
+    background-size: cover;
+    background-position: center;
+    position: relative; /* Needed for absolute positioning of the button */
+}
+/* Style for the Hakkımızda button */
+.btn-about-container {
+    position: absolute;
+    top: var(--spacing-xl); /* Adjust spacing as needed */
+    right: var(--spacing-xl); /* Adjust spacing as needed */
+}
+/* Center forgot password and register links */
+.login-links {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+}
+.login-links a {
+    margin: 0 var(--spacing-sm);
+    text-decoration: none;
+}
+
+/* Assuming other login styles (left/right panel etc) are in login.css */
+/* Bu satır zaten login.css içinde olduğumuz için gereksiz */

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}ISTÜN - DentAI | Doktor Kayıt{% endblock %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
+{% block content %}
+    {# Wrap content in a centering container #}
+    <div class="auth-page-container">
+        <div class="register-container">
+            <h1>Doktor Kayıt</h1>
+            
+            {# Flash messages are handled by base.html #}
+            
+            <form action="{{ url_for('register') }}" method="post" autocomplete="on">
+                <div class="form-group">
+                    <label for="doctor_name">AD :</label>
+                    {# Use appropriate autocomplete values #}
+                    <input type="text" id="doctor_name" name="doctor_name" required autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <label for="doctor_email">E-POSTA :</label>
+                    <input type="email" id="doctor_email" name="doctor_email" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="doctor_password">ŞİFRE :</label>
+                    <input type="password" id="doctor_password" name="doctor_password" required autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label for="doctor_password_confirm">ŞİFRE TEKRAR :</label>
+                    <input type="password" id="doctor_password_confirm" name="doctor_password_confirm" required autocomplete="new-password">
+                </div>
+                <div class="button-container">
+                    {# Use classes from main.css for consistency #}
+                    <button type="submit" class="btn btn-primary">KAYIT OL</button> 
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

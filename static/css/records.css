@@ -1,0 +1,186 @@
+/* static/css/records.css */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xxxl);
+}
+
+.header-title {
+    font-size: var(--title-font-size);
+    color: var(--text-color);
+}
+
+.header-actions {
+    display: flex;
+    gap: var(--spacing-lg);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.records-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-xxl);
+    width: 100%;
+}
+
+.record-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color-light);
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 4px 6px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.record-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px var(--shadow-hover-color);
+}
+
+.delete-button {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    background-color: var(--delete-color);
+    color: white;
+    border: none;
+    width: var(--spacing-xxl);
+    height: var(--spacing-xxl);
+    border-radius: var(--border-radius-circle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: var(--delete-button-font-size);
+    z-index: 10;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.delete-button:hover {
+    opacity: 1;
+}
+
+.xray-container {
+    border: 1px solid var(--border-color-very-light);
+    margin-bottom: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.xray-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.patient-info {
+    margin-top: var(--spacing-xs);
+    font-size: var(--base-font-size);
+    line-height: 1.4;
+}
+
+.patient-info p {
+    margin: var(--spacing-xs) 0;
+}
+
+.no-records {
+    text-align: center;
+    padding: var(--spacing-xxxl);
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 4px 6px var(--shadow-color);
+    margin-top: var(--spacing-xl);
+    width: 100%;
+}
+
+.delete-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete-modal-content {
+    background-color: var(--card-background);
+    padding: var(--spacing-xxl);
+    border-radius: var(--border-radius-lg);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+.delete-modal-title {
+    font-size: var(--modal-title-font-size);
+    margin-bottom: var(--spacing-xl);
+    color: var(--text-color);
+}
+
+.delete-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    margin-top: calc(var(--spacing-xl) + var(--spacing-xs)); /* 25px */
+}
+
+.modal-button {
+    padding: var(--spacing-md) var(--spacing-xl);
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-button.confirm {
+    background-color: var(--delete-color);
+    color: white;
+}
+
+.modal-button.cancel {
+    background-color: var(--cancel-color);
+    color: white;
+}
+
+/* Responsive layout for records page */
+@media (max-width: 1200px) {
+    .records-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .records-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .header {
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        align-items: center; /* Center align items when stacked */
+    }
+}
+
+@media (max-width: 600px) {
+    .records-container {
+        grid-template-columns: 1fr;
+    }
+    .header-title {
+        font-size: calc(var(--title-font-size) * 0.8); /* Make title smaller */
+    }
+} 
