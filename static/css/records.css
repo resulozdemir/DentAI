@@ -137,7 +137,7 @@
     display: flex;
     justify-content: center;
     gap: var(--spacing-lg);
-    margin-top: calc(var(--spacing-xl) + var(--spacing-xs)); /* 25px */
+    margin-top: calc(var(--spacing-xl) + var(--spacing-xs));
 }
 
 .modal-button {

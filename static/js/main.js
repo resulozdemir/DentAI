@@ -1,8 +1,4 @@
-// Main JavaScript file
-document.addEventListener('DOMContentLoaded', function() {
-    // Add JavaScript functionality here
-    
-    // Example: Preview uploaded image
+document.addEventListener('DOMContentLoaded', function() { 
     const fileInput = document.getElementById('xray_image');
     if (fileInput) {
         fileInput.addEventListener('change', function(event) {
@@ -12,20 +8,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 preview.className = 'image-preview';
                 preview.innerHTML = `<img src="${fileReader.result}" alt="X-Ray Preview">`;
                 
-                // Remove any existing preview
                 const existingPreview = document.querySelector('.image-preview');
                 if (existingPreview) {
                     existingPreview.remove();
                 }
                 
-                // Insert preview after the file input
                 fileInput.parentNode.insertBefore(preview, fileInput.nextSibling);
             };
             fileReader.readAsDataURL(event.target.files[0]);
         });
     }
     
-    // Print results button
     const printButton = document.getElementById('printResults');
     if (printButton) {
         printButton.addEventListener('click', function() {
@@ -33,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Modal işlemleri (varsa)
     const deleteModal = document.getElementById('deleteModal');
     const confirmDeleteButton = document.getElementById('confirmDelete');
     const cancelDeleteButton = document.getElementById('cancelDelete');
@@ -60,10 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (confirmDeleteButton) {
         confirmDeleteButton.addEventListener('click', function() {
             if (recordIdToDelete) {
-                // Silme işlemini tetikleyecek formu oluştur veya isteği gönder
                 const form = document.createElement('form');
                 form.method = 'POST';
-                // URL'yi dinamik olarak oluştur
                 form.action = `/delete_record/${recordIdToDelete}`;
 
                 document.body.appendChild(form);
@@ -75,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Modal dışına tıklanınca kapatma
     window.addEventListener('click', function(event) {
         if (event.target == deleteModal) {
             deleteModal.style.display = 'none';
@@ -83,6 +72,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Diğer JavaScript kodları buraya eklenebilir
     console.log("Main JavaScript dosyası yüklendi.");
 });

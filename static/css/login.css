@@ -26,9 +26,8 @@ body {
     flex-direction: column;
 }
 
-/* Override max-width specifically for login container */
 .login-container {
-    max-width: none; /* Remove the max-width limit */
+    max-width: none; 
 }
 
 h1 {
@@ -45,7 +44,6 @@ h2 {
     text-align: left;
 }
 
-/* Header with Logo and Navigation */
 .header {
     display: flex;
     justify-content: space-between;
@@ -77,17 +75,11 @@ h2 {
     margin-right: 0;
 }
 
-/* Login Page */
 .login-container {
     display: flex;
     flex-direction: row;
     height: 100vh;
     width: 100%;
-    /* Removed styles handled by body or unnecessary */
-    /* max-width: none; */
-    /* box-shadow: none; */
-    /* border-radius: 0; */
-    /* background: none; */
 }
 
 .left-side {
@@ -131,19 +123,16 @@ h2 {
     background-size: cover;
     background-position: center;
     position: relative;
-    /* background image set inline in index.html */
 }
 
 .nav-button {
     position: absolute;
-    top: var(--spacing-xl); /* Use variable */
-    right: var(--spacing-xl); /* Use variable */
+    top: var(--spacing-xl); 
+    right: var(--spacing-xl); 
 }
 
-/* Removed .btn-about as it's now .btn .btn-info in main.css */
 
-/* Form Styles Specific to Login */
-.login-content .form-group { /* More specific selector */
+.login-content .form-group { 
     margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
@@ -161,20 +150,17 @@ h2 {
 .login-content .form-group input {
     flex: 1;
     padding: 0.75rem;
-    border: 1px solid #fff; /* Consider var(--border-color-light) */
+    border: 1px solid #fff; 
     border-radius: 4px;
     font-size: 1rem;
-    background-color: #fff; /* Use var(--card-background)? */
+    background-color: #fff; 
 }
 
-.login-content .form-actions { /* More specific selector */
+.login-content .form-actions { 
     display: flex;
     justify-content: center;
     margin-top: 2.5rem;
 }
-
-/* Use .btn .btn-primary from main.css */
-/* Remove duplicate .btn-primary styles */
 
 .forgot-password {
     text-align: center;
@@ -207,18 +193,14 @@ h2 {
     text-decoration: underline;
 }
 
-/* Removed other page styles (registration, about, results etc.) */
-/* Removed media queries if they are general, keep if login-specific */
-
 .alert {
     padding: var(--spacing-lg);
     margin-bottom: var(--spacing-md);
     border-radius: var(--border-radius);
     border: 1px solid transparent;
-    /* Specific category styles might be needed if overriding main.css */
 }
 
-.alert-info { /* Example category */
+.alert-info {  
      color: #004085;
      background-color: #cce5ff;
      border-color: #b8daff;
@@ -242,7 +224,6 @@ h2 {
      border-color: #f5c6cb;
 }
 
-/* Registration Page Styles */
 .registration-panel {
     width: 100%;
     padding: 2rem;
@@ -307,7 +288,6 @@ h2 {
     font-style: italic;
 }
 
-/* About Us Page Styles */
 .about-container {
     padding: 2rem;
     max-width: 1000px;
@@ -419,7 +399,6 @@ h2 {
     text-align: center;
 }
 
-/* Patient Form Page */
 .content-wrapper {
     display: flex;
     flex-direction: row;
@@ -429,7 +408,6 @@ h2 {
     padding: 2rem;
 }
 
-/* Results Page */
 .results-container {
     padding: 2rem;
 }
@@ -528,7 +506,6 @@ h2 {
     margin-top: 2rem;
 }
 
-/* Alert messages */
 .alert {
     padding: 0.75rem 1.25rem;
     margin-bottom: 1rem;
@@ -540,7 +517,6 @@ h2 {
     text-align: center;
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
     .login-container, .content-wrapper {
         flex-direction: column;
@@ -564,7 +540,6 @@ h2 {
     }
 }
 
-/* Print styles */
 @media print {
     body {
         background: white;
@@ -580,19 +555,15 @@ h2 {
     }
 }
 
-/* Styles specific to index.html - MOVED FROM INDEX.HTML */
-/* Override base body padding for full screen */
 body {
-    padding: 0 !important; /* Remove padding from base.html */
-    display: flex; /* Ensure flex is applied if needed for login layout */
+    padding: 0 !important; 
+    display: flex; 
     min-height: 100vh;
-    background-color: #f5f5f5; /* Match patient_form background? Or keep original? */
+    background-color: #f5f5f5; 
 }
 .login-container {
-    /* Ensure it takes full width/height if body is flex */
      display: flex;
-     width: 100%;
-     /* height: 100vh; might not be needed if body has min-height */
+     width: 100%; 
 }
 .doctor-bg {
     /* URL'i doğrudan CSS'e ekleyemeyiz, bu HTML'de kalmalı veya farklı bir yöntem kullanılmalı */
@@ -601,15 +572,15 @@ body {
     /* YA DA en iyisi: .right-side'a doğrudan HTML içinden style attribute ile eklenmeli */
     background-size: cover;
     background-position: center;
-    position: relative; /* Needed for absolute positioning of the button */
+    position: relative; 
 }
-/* Style for the Hakkımızda button */
+
 .btn-about-container {
     position: absolute;
-    top: var(--spacing-xl); /* Adjust spacing as needed */
-    right: var(--spacing-xl); /* Adjust spacing as needed */
-}
-/* Center forgot password and register links */
+    top: var(--spacing-xl); 
+    right: var(--spacing-xl); 
+} 
+
 .login-links {
     text-align: center;
     margin-top: var(--spacing-lg);
@@ -617,7 +588,4 @@ body {
 .login-links a {
     margin: 0 var(--spacing-sm);
     text-decoration: none;
-}
-
-/* Assuming other login styles (left/right panel etc) are in login.css */
-/* Bu satır zaten login.css içinde olduğumuz için gereksiz */
+} 

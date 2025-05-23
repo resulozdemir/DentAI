@@ -24,7 +24,7 @@ Bu proje, İstanbul Sağlık ve Teknoloji Üniversitesi (İSTÜN) bünyesinde ge
     *   Yeni hasta bilgilerini (TC No, Ad Soyad, Yaş, Doğum Tarihi, Cinsiyet) kaydetme formu.
     *   Mevcut hastaların otomatik olarak tanınması.
 *   **X-Ray Analizi:**
-    *   Panoramik röntgen görüntüsü yükleme.
+    *   Röntgen görüntüsü yükleme.
     *   Yüklenen orijinal görüntünün saklanması (`uploads/original`).
     *   LandingAI servisi üzerinden eğitilmiş model ile görüntü analizi.
     *   Analiz sonucunda gömülü dişlerin türü, adeti ve konumunun (sağ/sol) belirlenmesi.
@@ -39,7 +39,6 @@ Bu proje, İstanbul Sağlık ve Teknoloji Üniversitesi (İSTÜN) bünyesinde ge
     *   İstenilen kaydın (veritabanı kaydı ve ilgili dosyalar) güvenli bir şekilde silinmesi.
 *   **Diğer:**
     *   Proje ve ekip hakkında bilgi veren "Hakkımızda" sayfası.
-    *   Duyarlı (Responsive) tasarım (temel düzeyde).
 
 ## Proje Yapısı
 
@@ -52,8 +51,8 @@ Bu proje, İstanbul Sağlık ve Teknoloji Üniversitesi (İSTÜN) bünyesinde ge
 ├── .env                    # Ortam değişkenleri (Veritabanı, Mail/OAuth bilgileri - GİZLİ)
 ├── README.md               # Bu dosya
 ├── static/                 # Statik dosyalar (CSS, JavaScript, Resimler)
-│   ├── css/                # CSS stil dosyaları (main.css, login.css vb.)
-│   ├── js/                 # JavaScript dosyaları (varsa)
+│   ├── css/                # CSS stil dosyaları
+│   ├── js/                 # JavaScript dosyaları
 │   └── images/             # Arayüzde kullanılan resimler (logo, arka plan vb.)
 ├── templates/              # HTML şablonları (Jinja2)
 │   ├── base.html           # Ana şablon (Header, Footer, Flash mesajlar)
@@ -65,7 +64,7 @@ Bu proje, İstanbul Sağlık ve Teknoloji Üniversitesi (İSTÜN) bünyesinde ge
 │   ├── results.html        # Analiz sonuçlarının gösterildiği sayfa
 │   ├── previous_records.html # Geçmiş kayıtların listelendiği sayfa
 │   └── about.html          # Hakkımızda sayfası
-└── uploads/                # Kullanıcı tarafından yüklenen dosyaların saklandığı yer (Geçici)
+└── uploads/                # Kullanıcı tarafından yüklenen dosyaların saklandığı yer
     ├── original/           # Yüklenen orijinal röntgen görüntüleri
     └── results/            # Analiz sonucu oluşturulan işaretlenmiş görüntüler
 ```

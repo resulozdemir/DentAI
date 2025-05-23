@@ -10,14 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetButton = event.currentTarget;
             const deleteUrl = targetButton.getAttribute('data-delete-url');
 
-            // Create form dynamically
             deleteForm = document.createElement('form');
             deleteForm.method = 'POST';
-            deleteForm.action = deleteUrl; // Use the full URL from the button
-            deleteForm.style.display = 'none'; // Hide the form
+            deleteForm.action = deleteUrl; 
+            deleteForm.style.display = 'none'; 
 
-            // Add CSRF token if needed (assuming Flask-WTF is used)
-            const csrfTokenInput = document.querySelector('input[name="csrf_token"]'); // Adjust selector if needed
+            const csrfTokenInput = document.querySelector('input[name="csrf_token"]'); 
             if (csrfTokenInput) {
                 const csrfInput = document.createElement('input');
                 csrfInput.type = 'hidden';
@@ -40,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cancelDeleteBtn.addEventListener('click', () => {
         if (deleteForm) {
-            document.body.removeChild(deleteForm); // Remove the form if cancelled
+            document.body.removeChild(deleteForm); 
             deleteForm = null;
         }
         deleteModal.style.display = 'none';

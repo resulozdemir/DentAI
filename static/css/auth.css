@@ -1,15 +1,10 @@
-/* static/css/auth.css */
-
-/* Shared container for centering auth forms */
 .auth-page-container { 
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 80vh; /* Adjust as needed */
-    /* Inherits background from body */
+    min-height: 80vh;
 }
 
-/* Base styles for auth form containers */
 .register-container,
 .forgot-password-container,
 .reset-password-container {
@@ -22,38 +17,33 @@
     box-shadow: 0 4px 6px var(--shadow-color);
 }
 
-/* Headings in auth forms */
 .register-container h1,
 .forgot-password-container h1,
 .reset-password-container h1 {
     color: var(--text-color);
     font-size: var(--title-font-size);
-    margin-bottom: var(--spacing-xxxl); /* Adjusted margin */
+    margin-bottom: var(--spacing-xxxl);
 }
 
-/* Instructions text */
 .forgot-password-container .instructions,
 .reset-password-container .instructions {
     margin: var(--spacing-xl) 0 var(--spacing-xxxl);
     color: var(--text-color);
     line-height: 1.6;
-    font-size: calc(var(--base-font-size) + 2px); /* 16px */
+    font-size: calc(var(--base-font-size) + 2px);
     text-align: center;
 }
 
-/* Form groups */
 .register-container .form-group,
 .forgot-password-container .form-group,
 .reset-password-container .form-group {
-    margin-bottom: var(--spacing-xl); /* Unified margin */
+    margin-bottom: var(--spacing-xl);
 }
 
-/* Specific alignments */
 .register-container .form-group { text-align: right; }
 .forgot-password-container .form-group { text-align: center; }
 .reset-password-container .form-group { text-align: left; }
 
-/* Labels */
 .register-container label {
     display: inline-block;
     width: 30%; 
@@ -71,14 +61,13 @@
     font-weight: bold;
 }
 
-/* Inputs */
 .register-container input,
 .forgot-password-container input,
 .reset-password-container input {
     padding: var(--spacing-md);
     border: 1px solid var(--border-color-light);
     border-radius: var(--border-radius);
-    font-size: calc(var(--base-font-size) + 2px); /* 16px */
+    font-size: calc(var(--base-font-size) + 2px);
     background-color: white;
 }
 
@@ -86,15 +75,13 @@
 .forgot-password-container input { width: 100%; }
 .reset-password-container input { width: 100%; }
 
-/* Button containers */
 .register-container .button-container {
     margin-top: var(--spacing-xxl);
     text-align: center;
 }
 
-/* Message/Alert styling (specific to reset_password for now) */
 .reset-password-container .messages {
-    background-color: #f8d7da; /* Error/warning background */
+    background-color: #f8d7da;
     color: #721c24;
     padding: var(--spacing-lg);
     margin-bottom: var(--spacing-xl);
@@ -111,4 +98,4 @@
 
 .reset-password-container .messages li {
      margin-bottom: var(--spacing-sm);
-} 
+}

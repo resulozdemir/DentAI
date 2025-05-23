@@ -48,7 +48,7 @@ os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'original'), exist_ok=True
 os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'results'), exist_ok=True)
 
 # API Anahtarı ve Endpoint ID
-ENDPOINT_ID = "25a60f20-a91d-49c4-8b2a-afeb0c9d096d"
+ENDPOINT_ID = "c4e981db-70c4-4178-b04b-d967dccdfb96"
 API_KEY = "land_sk_1q3qjHgulUP75mihloCvRaDUuj8GFe7R6BaqRVO2ph4Fd8ICc2"
 
 # Veritabanını başlat

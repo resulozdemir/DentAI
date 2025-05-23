@@ -51,16 +51,15 @@ body {
     flex-direction: column;
     color: var(--text-color);
     padding: var(--spacing-xxxl) var(--spacing-xl);
-    position: relative; /* Needed for absolute positioning context of flash messages if not fixed */
+    position: relative;
 }
 
-.container { /* Genel içerik sarmalayıcı - ARTIK TAM GENİŞLİK */
+.container {
     width: 100%;
-    padding-left: var(--spacing-xl); /* Kenar boşlukları için padding ekleyebiliriz */
+    padding-left: var(--spacing-xl);
     padding-right: var(--spacing-xl);
 }
 
-/* İstenirse, ortalanmış ve max-width içeren ayrı bir sınıf oluşturulabilir */
 .container-centered {
     width: 100%;
     max-width: 1200px; 
@@ -102,16 +101,16 @@ body {
 }
 
 .btn-secondary {
-    background-color: #555; /* Gri tonu */
+    background-color: #555;
     color: white;
 }
 
 .btn-secondary:hover {
-    background-color: #333; /* Koyu gri */
+    background-color: #333;
 }
 
-.btn-info { /* New class for about button */
-    background-color: var(--primary-color); /* Use primary or a different info color */
+.btn-info {
+    background-color: var(--primary-color);
     color: white;
 }
 
@@ -124,22 +123,19 @@ body {
     margin-bottom: var(--spacing-xl);
 }
 
-/* Flash Messages Styling */
-.flash-messages-container { /* New wrapper for positioning */
-    position: fixed; /* Fixed position at the top */
+.flash-messages-container {
+    position: fixed;
     top: 0;
     left: 50%;
-    transform: translateX(-50%); /* Center horizontally */
+    transform: translateX(-50%);
     width: 100%;
-    max-width: 600px; /* Max width for the message */
-    z-index: 1050; /* Ensure it's above most elements */
-    padding-top: var(--spacing-lg); /* Space from top */
-    pointer-events: none; /* Allow clicks through the container */
+    max-width: 600px;
+    z-index: 1050;
+    padding-top: var(--spacing-lg);
+    pointer-events: none;
 }
 
 .flash-message {
-    /* background-color: var(--flash-success-bg); */ /* Moved to specific classes */
-    /* color: var(--flash-success-text); */ /* Moved to specific classes */
     padding: var(--spacing-lg);
     border-radius: var(--border-radius);
     margin-bottom: var(--spacing-md);
@@ -147,9 +143,9 @@ body {
     opacity: 0;
     transform: translateY(-50px);
     animation: slideDownFadeIn 0.5s ease-out forwards;
-    pointer-events: all; /* Enable pointer events for the message itself */
-    display: flex; /* Allow button alignment */
-    justify-content: space-between; /* Space between text and close button */
+    pointer-events: all;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -157,7 +153,6 @@ body {
     animation: slideUpFadeOut 0.5s ease-in forwards;
 }
 
-/* Categories for different message types */
 .flash-message.flash-success {
     background-color: var(--flash-success-bg, #d4edda);
     color: var(--flash-success-text, #155724);
@@ -198,7 +193,6 @@ body {
     opacity: 1;
 }
 
-/* Keyframes for animations */
 @keyframes slideDownFadeIn {
     from {
         opacity: 0;
@@ -221,13 +215,10 @@ body {
     }
 }
 
-/* Responsive Genel Ayarlar */
 @media (max-width: 1200px) {
-    /* Gerekirse genel responsive ayarları */
 }
 
 @media (max-width: 900px) {
-   /* Gerekirse genel responsive ayarları */
 }
 
 @media (max-width: 600px) {

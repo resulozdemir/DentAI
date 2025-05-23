@@ -1,6 +1,5 @@
 /* static/css/results.css */
 
-/* Override base.html styles */
 body {
     background: linear-gradient(to right, #1a3a5f, #4a648c, #1a3a5f); 
     color: white;
@@ -19,10 +18,9 @@ h1.page-title {
     text-align: center;
     color: white; 
     width: 100%;
-    /* Ensure it appears above the flex container if needed */
     margin-left: auto; 
     margin-right: auto;
-    max-width: 1200px; /* Optional: Limit title width */
+    max-width: 1200px;
 }
 
 .left-column {
@@ -39,7 +37,7 @@ h1.page-title {
 
 .patient-info {
     margin-bottom: var(--spacing-xl);
-    font-size: calc(var(--base-font-size) + 2px); /* 16px */
+    font-size: calc(var(--base-font-size) + 2px);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xs);
@@ -120,22 +118,21 @@ h1.page-title {
     text-align: center;
     font-size: var(--base-font-size);
     width: 100%;
-    display: flex; /* Align text and value */
-    justify-content: space-between; /* Space out text and value */
+    display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 
 .result-value {
-    font-size: calc(var(--base-font-size) + 4px); /* 18px */
+    font-size: calc(var(--base-font-size) + 4px);
     font-weight: bold;
-    margin-top: 0; /* Adjusted from inline */
+    margin-top: 0;
     color: var(--primary-color);
-    margin-left: var(--spacing-sm); /* Add space */
+    margin-left: var(--spacing-sm);
 }
 
-/* Eski yazdırma düğmesi stili */
 .print-button {
-    background-color: #007bff; /* Primary color */
+    background-color: #007bff;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -143,16 +140,15 @@ h1.page-title {
     cursor: pointer;
     transition: background-color 0.3s ease;
     font-size: 1em;
-    display: block; /* Ensure it takes block space if needed */
-    width: fit-content; /* Adjust width to content */
-    margin: 20px auto; /* Center the button if needed */
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
 }
 
 .print-button:hover {
-    background-color: #0056b3; /* Darker shade on hover */
+    background-color: #0056b3;
 }
 
-/* Print styles */
 @media print {
     body {
         background: white;

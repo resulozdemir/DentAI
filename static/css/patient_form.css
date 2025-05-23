@@ -1,6 +1,5 @@
 /* static/css/patient_form.css */
 
-/* Override base body padding for full screen layout */
 body {
     padding: 0 !important; 
     display: flex; 
@@ -38,11 +37,11 @@ body {
 .right-panel h1 {
     color: var(--text-color);
     margin-bottom: var(--spacing-xxxl);
-    font-size: calc(var(--title-font-size) * 0.9); /* 32px */
+    font-size: calc(var(--title-font-size) * 0.9);
     text-align: center;
 }
 
-.right-panel .form-group { /* Specific to this form */
+.right-panel .form-group {
     margin-bottom: var(--spacing-xl);
     display: flex;
     align-items: center;
@@ -70,7 +69,6 @@ body {
      padding: var(--spacing-xs); 
 }
 
-/* Wrapper for file input if needed */
 .file-input-wrapper {
     display: flex; 
     align-items: center; 
@@ -88,7 +86,6 @@ body {
     gap: var(--spacing-xl);
 }
 
-/* Restore .btn-secondary styles */
 .right-panel .btn-secondary { 
     background-color: #555; 
     color: white;
@@ -98,7 +95,6 @@ body {
     background-color: #333;
 }
 
-/* Alert styling for this page (if different from base flash) */
 .right-panel .alert {
     background-color: #f8d7da; 
     color: #721c24;
@@ -108,7 +104,7 @@ body {
     border: 1px solid #f5c6cb;
 }
 
-.logout-btn { /* Positioned within the right panel */
+.logout-btn {
     position: absolute;
     top: var(--spacing-xl);
     right: var(--spacing-xl);
