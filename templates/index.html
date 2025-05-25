@@ -3,29 +3,10 @@
 {% block title %}ISTÜN - DentAI | Gömülü Diş Analiz Asistanı{% endblock %}
 
 {% block head_extra %}
-    {# Assume 'style.css' contains styles specific to this page or multiple pages including this one #}
-    {# It might be better to rename/refactor style.css later #}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-    {# Stil bloğu login.css'e taşındı #}
 {% endblock %}
 
 {% block content %}
-    {# Flash messages are handled by base.html - REMOVING THIS BLOCK #}
-    {# 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="alert-container" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050; width: 90%; max-width: 600px;">
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category or 'info' }}" role="alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-    #}
-
     <div class="login-container">
         <div class="left-side">
             <div class="login-content">
@@ -53,7 +34,7 @@
                 </form>
             </div>
         </div>
-        <div class="right-side doctor-bg" style='background-image: url("{{ url_for('static', filename='images/doctor2.jpg') }}");'>
+        <div class="right-side doctor-bg">
             <div class="btn-about-container"> {# Container for positioning #}
                 <a href="{{ url_for('about') }}" class="btn btn-primary">HAKKIMIZDA</a> {# Use same style as Giriş Yap #}
             </div>

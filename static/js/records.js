@@ -53,6 +53,4 @@ document.addEventListener('DOMContentLoaded', () => {
             deleteModal.style.display = 'none';
         }
     });
-
-    console.log("Records JavaScript loaded and modal listeners attached.");
 }); 

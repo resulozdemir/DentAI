@@ -71,6 +71,4 @@ document.addEventListener('DOMContentLoaded', function() {
             recordIdToDelete = null;
         }
     });
-
-    console.log("Main JavaScript dosyası yüklendi.");
 });

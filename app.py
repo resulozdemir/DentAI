@@ -10,9 +10,7 @@ import contextlib
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import Session
 from database import Doctor, Patient, XRay, XRayResult, init_db, get_db, engine
-import datetime
-# Flask-Mail importları kaldırıldı
-# from flask_mail import Mail, Message
+import datetime 
 import uuid
 from dotenv import load_dotenv
 from functools import wraps
@@ -27,19 +25,9 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
-app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['UPLOAD_FOLDER'] = 'uploads' 
 
-# Mail ayarları kaldırıldı
-# app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
-# app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 587))
-# app.config['MAIL_USE_TLS'] = True
-# app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
-# app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-# app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER', app.config['MAIL_USERNAME'])
 
-# mail = Mail(app) # Mail nesnesi kaldırıldı
-
-# Şifre sıfırlama jetonlarını saklamak için sözlük (Bu hala bellekte, ideal değil ama şimdilik kalabilir)
 password_reset_tokens = {}
 
 # Ensure the upload folder exists
@@ -69,15 +57,6 @@ def get_gmail_service():
     refresh_token = os.getenv('GOOGLE_REFRESH_TOKEN')
     token_uri = 'https://oauth2.googleapis.com/token' # Google token endpoint
 
-    # Ekstra loglama:
-    app.logger.info("get_gmail_service fonksiyonu çağrıldı.")
-    app.logger.info(f"  Client ID .env'den yüklendi mi? {client_id is not None}")
-    app.logger.info(f"  Client Secret .env'den yüklendi mi? {client_secret is not None}")
-    app.logger.info(f"  Refresh Token .env'den yüklendi mi? {refresh_token is not None}")
-    if refresh_token:
-        app.logger.info(f"  Yüklenen Refresh Token başlangıcı: {refresh_token[:10]}...")
-    # --- Bitiş: Ekstra loglama
-
     if not all([client_id, client_secret, refresh_token]):
         app.logger.error("Google OAuth kimlik bilgileri .env dosyasında eksik.")
         return None
@@ -91,17 +70,11 @@ def get_gmail_service():
             client_secret=client_secret,
             scopes=['https://www.googleapis.com/auth/gmail.send'] # Kapsamı belirt
         )
-        app.logger.info("Credentials nesnesi başarıyla oluşturuldu.") # Log eklendi
-
-        # Ekstra loglama:
-        app.logger.info(f"  Credentials nesnesi geçerli mi (valid)? {creds.valid}")
-        app.logger.info(f"  Credentials nesnesinin süresi dolmuş mu (expired)? {creds.expired}")
-        app.logger.info(f"  Credentials nesnesinde refresh_token var mı? {creds.refresh_token is not None}")
-        # --- Bitiş: Ekstra loglama
+        app.logger.info("Credentials nesnesi başarıyla oluşturuldu.") 
 
         # Token'ın geçerli olup olmadığını kontrol et, gerekirse yenile
         if not creds.valid:
-            app.logger.warning("Credentials nesnesi geçerli değil (not valid). Yenileme deneniyor...") # Log eklendi
+            app.logger.warning("Credentials nesnesi geçerli değil (not valid). Yenileme deneniyor...") 
             if creds.refresh_token: # Yeni koşul: Geçerli değilse ve refresh token varsa yenilemeyi dene.
                 try:
                     # Token'ı yenilemek için istek gönder
@@ -123,9 +96,9 @@ def get_gmail_service():
                 return None
 
         # Gmail API servisini oluştur
-        app.logger.info("Gmail API servisi oluşturuluyor...") # Log eklendi
+        app.logger.info("Gmail API servisi oluşturuluyor...") 
         service = googleapiclient.discovery.build('gmail', 'v1', credentials=creds)
-        app.logger.info("Gmail API servisi başarıyla oluşturuldu.") # Log eklendi
+        app.logger.info("Gmail API servisi başarıyla oluşturuldu.") 
         return service
 
     except Exception as e:
@@ -138,9 +111,9 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         if 'doctor_id' not in session:
             flash('Bu sayfayı görüntülemek için giriş yapmanız gerekmektedir.', 'warning')
-            return redirect(url_for('index')) # Redirect to login page (index)
-        response = make_response(f(*args, **kwargs))
-        # Add headers to prevent caching - ensure no-store is present
+            return redirect(url_for('index')) # Giriş sayfasına yönlendir (index)
+        response = make_response(f(*args, **kwargs)) 
+
         response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
         response.headers['Pragma'] = 'no-cache'
         response.headers['Expires'] = '0'
@@ -149,11 +122,7 @@ def login_required(f):
 
 @app.route('/')
 def index():
-    # If user is already logged in, redirect to patient_form - REMOVING THIS CHECK
-    # if 'doctor_id' in session:
-    #     return redirect(url_for('patient_form'))
-    return render_template('index.html') # Restore template rendering
-    # return "Ana Sayfa Testi Başarılı!" # Remove the simple string return
+    return render_template('index.html') 
 
 @app.route('/about')
 def about():
@@ -178,8 +147,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.clear()
-    # flash('Başarıyla çıkış yaptınız.', 'success') # Remove the flash message
+    session.clear() 
     return redirect(url_for('index'))
 
 @app.route('/patient_form')
@@ -190,7 +158,7 @@ def patient_form():
 @app.route('/analyze', methods=['POST'])
 @login_required
 def analyze():
-    # Get patient information
+    # Hasta bilgilerini al
     patient_info = {
         'name': request.form.get('name', ''),
         'tc_no': request.form.get('tc_no', ''),
@@ -199,7 +167,7 @@ def analyze():
         'gender': request.form.get('gender', '')
     }
     
-    # Check if X-ray file was uploaded
+    # X-ray dosyasının yüklenip yüklenmediğini kontrol et
     if 'xray_image' not in request.files:
         flash('X-ray resmi yüklenmedi!')
         return redirect(url_for('patient_form'))
@@ -210,7 +178,7 @@ def analyze():
         flash('Dosya seçilmedi!')
         return redirect(url_for('patient_form'))
     
-    # Save the uploaded file
+    # Yüklenen dosyayı kaydet
     original_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'original')
     results_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'results')
     
@@ -221,28 +189,28 @@ def analyze():
     file_path = os.path.join(original_dir, unique_filename)
     file.save(file_path)
     
-    # Process the image with LandingAI
+    # Resmi LandingAI ile işle
     try:
         image = Image.open(file_path)
         
-        # Perform inference
+        # Çıkarım yap
         predictor = Predictor(ENDPOINT_ID, api_key=API_KEY)
         results = predictor.predict(image)
         
-        # Create annotated image
+        # Açıklamalı resim oluştur
         frame_with_preds = overlay_predictions(results, image=image)
         
-        # Save annotated image
+        # Açıklamalı resmi kaydet
         result_image_name = f"result_{unique_filename}"
         result_image_path = os.path.join(results_dir, result_image_name)
         frame_with_preds.save(result_image_path)
         
-        # Convert the PIL image to base64 for display in HTML
+        # PIL görüntüsünü HTML'de görüntülemek için base64'e dönüştür
         buffered = io.BytesIO()
         frame_with_preds.save(buffered, format="JPEG")
         img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
         
-        # Extract results
+        # Sonuçları çıkar
         detected_teeth = []
         tooth_locations = []
         tooth_types = []
@@ -256,13 +224,13 @@ def analyze():
                     if tooth_type not in tooth_types:
                         tooth_types.append(tooth_type)
                     
-                    # Determine position
+                    # Konumu belirle
                     tooth_location = "UNIDENTIFIED"
                     if hasattr(result, 'bboxes'):
                         bbox = result.bboxes
                         if bbox:
-                            # Determine if the tooth is on the right or left side
-                            # Assuming the image has the patient facing the viewer
+                            # Dişin sağda mı solda mı olduğunu belirle
+                            # Görüntünün hastanın izleyiciye baktığını varsayarak
                             image_width = image.width
                             bbox_center_x = (bbox[0] + bbox[2]) / 2
                             
@@ -288,7 +256,7 @@ def analyze():
         formatted_tooth_types = ", ".join(tooth_types) if tooth_types else "UNIDENTIFIED"
         formatted_tooth_locations = ", ".join(tooth_locations) if tooth_locations else "UNIDENTIFIED"
         
-        # Prepare information for the results page
+        # Sonuçlar sayfası için bilgileri hazırla
         analysis_results = {
             'image_base64': img_str,
             'tooth_types': tooth_types,
@@ -362,8 +330,8 @@ def forgot_password():
             if doctor:
                 # Benzersiz bir jeton oluştur
                 reset_token = str(uuid.uuid4())
-                # Jetonu sakla (hala bellekte, ideal değil)
-                password_reset_tokens[reset_token] = {'doctor_id': doctor.id, 'expiry': datetime.datetime.now() + datetime.timedelta(hours=1)}
+                
+                password_reset_tokens[reset_token] = {'doctor_id': doctor.id, 'expiry': datetime.datetime.now() + datetime.timedelta(minutes=15)}
 
                 # Şifre sıfırlama e-postası gönder (Gmail API ile)
                 reset_url = url_for('reset_password', token=reset_token, _external=True)
@@ -385,7 +353,7 @@ def forgot_password():
 
 {reset_url}
 
-Bu bağlantı 1 saat içinde geçerliliğini yitirecektir.
+Bu bağlantı 15 dakika içinde geçerliliğini yitirecektir.
 
 Eğer bu isteği siz yapmadıysanız, lütfen bu e-postayı dikkate almayın.
 
@@ -503,13 +471,13 @@ def previous_records():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        # Get form data
+        # Form verilerini al
         doctor_name = request.form.get('doctor_name')
         doctor_email = request.form.get('doctor_email')
         doctor_password = request.form.get('doctor_password')
         doctor_password_confirm = request.form.get('doctor_password_confirm')
         
-        # Validate form data
+        # Form verilerini doğrula
         if not all([doctor_name, doctor_email, doctor_password, doctor_password_confirm]):
             flash('Lütfen tüm alanları doldurunuz.')
             return redirect(url_for('register'))
