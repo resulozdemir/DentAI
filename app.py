@@ -8,6 +8,7 @@ import io
 import base64
 import contextlib
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.exceptions import RequestEntityTooLarge
 from sqlalchemy.orm import Session
 from database import Doctor, Patient, XRay, XRayResult, init_db, get_db, engine
 import datetime 
@@ -25,8 +26,9 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
-app.config['UPLOAD_FOLDER'] = 'uploads' 
-
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1 MB dosya boyutu sınırı
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg'}
 
 password_reset_tokens = {}
 
@@ -120,6 +122,18 @@ def login_required(f):
         return response
     return decorated_function
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# 413 Request Entity Too Large hatası için özel handler
+@app.errorhandler(413)
+def handle_request_entity_too_large(e):
+    # MAX_CONTENT_LENGTH byte cinsinden olduğu için MB'a çeviriyoruz
+    max_size_mb = app.config.get('MAX_CONTENT_LENGTH', 1 * 1024 * 1024) / (1024 * 1024)
+    flash(f'Yüklenen dosya çok büyük. Maksimum dosya boyutu {max_size_mb:.0f} MB olmalıdır.')
+    return redirect(url_for('patient_form'))
+
 @app.route('/')
 def index():
     return render_template('index.html') 
@@ -159,12 +173,33 @@ def patient_form():
 @login_required
 def analyze():
     # Hasta bilgilerini al
+    patient_name = request.form.get('name', '').strip()
+    patient_tc_no = request.form.get('tc_no', '').strip()
+    patient_age = request.form.get('age', '').strip()
+    patient_birth_date = request.form.get('birth_date', '').strip()
+    patient_gender = request.form.get('gender', '')
+
+    # Ad Soyad Doğrulaması: Sadece harf ve boşluk içermeli
+    if not patient_name or not all(char.isalpha() or char.isspace() for char in patient_name):
+        flash('Lütfen geçerli bir ad soyad giriniz (sadece harf ve boşluk).')
+        return redirect(url_for('patient_form'))
+
+    # TC Kimlik Numarası Doğrulaması: 11 haneli ve sadece sayı olmalı
+    if not patient_tc_no.isdigit() or len(patient_tc_no) != 11:
+        flash('Lütfen geçerli bir TC Kimlik Numarası giriniz (11 rakam).')
+        return redirect(url_for('patient_form'))
+        
+    # Yaş alanı sadece sayı olmalı (isteğe bağlı)
+    if patient_age and not patient_age.isdigit():
+        flash('Lütfen yaş için geçerli bir sayı giriniz.')
+        return redirect(url_for('patient_form'))
+
     patient_info = {
-        'name': request.form.get('name', ''),
-        'tc_no': request.form.get('tc_no', ''),
-        'age': request.form.get('age', ''),
-        'birth_date': request.form.get('birth_date', ''),
-        'gender': request.form.get('gender', '')
+        'name': patient_name,
+        'tc_no': patient_tc_no,
+        'age': patient_age,
+        'birth_date': patient_birth_date,
+        'gender': patient_gender
     }
     
     # X-ray dosyasının yüklenip yüklenmediğini kontrol et
@@ -178,6 +213,15 @@ def analyze():
         flash('Dosya seçilmedi!')
         return redirect(url_for('patient_form'))
     
+    if not file or not allowed_file(file.filename):
+        flash('Geçersiz dosya türü! Sadece JPG veya JPEG dosyaları yüklenebilir.')
+        return redirect(url_for('patient_form'))
+
+    # MIME türü kontrolü (ekstra güvenlik)
+    if file.mimetype not in ['image/jpeg']:
+        flash('Geçersiz dosya içeriği! Dosya bir JPG/JPEG resmi olmalıdır.')
+        return redirect(url_for('patient_form'))
+        
     # Yüklenen dosyayı kaydet
     original_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'original')
     results_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'results')
@@ -253,16 +297,16 @@ def analyze():
                     tooth_count += 1
         
         # Diş türlerini ve konumları formatla
-        formatted_tooth_types = ", ".join(tooth_types) if tooth_types else "UNIDENTIFIED"
-        formatted_tooth_locations = ", ".join(tooth_locations) if tooth_locations else "UNIDENTIFIED"
+        formatted_tooth_types = ", ".join(tooth_types) if tooth_types else "Bulunamadı"
+        formatted_tooth_locations = ", ".join(tooth_locations) if tooth_locations else "Bulunamadı"
         
         # Sonuçlar sayfası için bilgileri hazırla
         analysis_results = {
             'image_base64': img_str,
-            'tooth_types': tooth_types,
+            'tooth_types': tooth_types if tooth_types else ["Bulunamadı"],
             'tooth_type': formatted_tooth_types,
             'tooth_count': tooth_count,
-            'tooth_locations': tooth_locations,
+            'tooth_locations': tooth_locations if tooth_locations else ["Bulunamadı"],
             'tooth_location': formatted_tooth_locations,
             'detected_teeth': detected_teeth,
             'raw_results': str(results)
@@ -271,25 +315,64 @@ def analyze():
         # Veritabanına kaydet
         with get_db_session() as db:
             # Önce hastayı bul veya oluştur
-            patient = db.query(Patient).filter(Patient.tc_no == patient_info['tc_no']).first()
+            existing_patient = db.query(Patient).filter(Patient.tc_no == patient_info['tc_no']).first()
             
-            if not patient:
-                patient = Patient(
+            patient_to_use = None
+
+            if existing_patient:
+                # TC No var, diğer bilgileri kontrol et
+                is_name_match = existing_patient.full_name.lower() == patient_info['name'].lower()
+                
+                # Yaş kontrolü (eğer her ikisi de dolu ise)
+                is_age_match = True
+                if patient_info['age'] and existing_patient.age:
+                    is_age_match = int(patient_info['age']) == existing_patient.age
+                
+                # Cinsiyet kontrolü (eğer her ikisi de dolu ise)
+                is_gender_match = True
+                if patient_info['gender'] and existing_patient.gender:
+                    is_gender_match = patient_info['gender'] == existing_patient.gender
+                
+                # Doğum tarihi kontrolü (eğer her ikisi de dolu ise)
+                is_birth_date_match = True
+                if patient_info['birth_date'] and existing_patient.birth_date:
+                    is_birth_date_match = patient_info['birth_date'] == existing_patient.birth_date
+
+                if is_name_match and is_age_match and is_gender_match and is_birth_date_match:
+                    patient_to_use = existing_patient
+                else:
+                    # Hangi bilgilerin uyuşmadığını belirle
+                    mismatched_fields = []
+                    if not is_name_match:
+                        mismatched_fields.append("Ad Soyad")
+                    if not is_age_match:
+                        mismatched_fields.append("Yaş")
+                    if not is_gender_match:
+                        mismatched_fields.append("Cinsiyet")
+                    if not is_birth_date_match:
+                        mismatched_fields.append("Doğum Tarihi")
+                    
+                    flash(f"'{patient_info['tc_no']}' TC Kimlik Numarası sistemde farklı bilgilerle kayıtlı. Uyuşmayan alanlar: {', '.join(mismatched_fields)}. Lütfen bilgileri kontrol edin.")
+                    return redirect(url_for('patient_form'))
+            else:
+                # Yeni hasta oluştur
+                new_patient = Patient(
                     tc_no=patient_info['tc_no'],
                     full_name=patient_info['name'],
                     age=int(patient_info['age']) if patient_info['age'].isdigit() else None,
-                    birth_date=patient_info['birth_date'],
+                    birth_date=patient_info['birth_date'] if patient_info['birth_date'] else None, # Tarih boşsa None
                     gender=patient_info['gender'],
                     doctor_id=session['doctor_id']
                 )
-                db.add(patient)
+                db.add(new_patient)
                 db.flush()  # ID'yi oluşturmak için flush yapıyoruz
+                patient_to_use = new_patient
             
-            # X-ray kaydını oluştur
+            # X-ray kaydını oluştur (patient_to_use kullanarak)
             xray = XRay(
                 file_path=file_path,
                 file_name=file.filename,
-                patient_id=patient.id
+                patient_id=patient_to_use.id
             )
             db.add(xray)
             db.flush()
@@ -455,9 +538,9 @@ def previous_records():
                             'patient_tc': patient.tc_no,
                             'xray_date': xray.upload_date,
                             'xray_date_str': xray.upload_date.strftime('%d.%m.%Y %H:%M'),
-                            'tooth_type': result.tooth_types,
+                            'tooth_type': result.tooth_types if result.tooth_types and result.tooth_types.strip() and result.tooth_types != "UNIDENTIFIED" else "Bulunamadı",
                             'tooth_count': result.tooth_count,
-                            'tooth_location': result.tooth_locations,
+                            'tooth_location': result.tooth_locations if result.tooth_locations and result.tooth_locations.strip() and result.tooth_locations != "UNIDENTIFIED" else "Bulunamadı",
                             'image_base64': img_data
                         })
                     except Exception as e:
