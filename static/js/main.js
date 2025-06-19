@@ -1,3 +1,9 @@
+// Bu JavaScript dosyası hasta formu üzerindeki görüntü önizleme, sonuç yazdırma ve kayıt silme modalı gibi temel etkileşimleri yönetir.
+// Fonksiyonlar:
+// 1) X-ray görüntüsü seçildiğinde hasta formunda canlı önizleme oluşturur.
+// 2) Sonuç sayfasında 'Yazdır' butonuna basıldığında tarayıcı yazdırma penceresini açar.
+// 3) Her bir kayıt kartındaki silme butonu modalını tetikler ve onaylandığında POST isteği göndererek kaydı siler.
+
 document.addEventListener('DOMContentLoaded', function() { 
     const fileInput = document.getElementById('xray_image');
     if (fileInput) {

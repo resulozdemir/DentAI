@@ -1,3 +1,6 @@
+// Bu JavaScript dosyası geçmiş kayıtlar sayfasındaki silme modalı ve CSRF token işlemlerini yönetir.
+// Silme butonuna tıklandığında modal açılır; onaylandığında dinamik olarak oluşturulan form POST isteğiyle sunucuya gönderilir.
+
 document.addEventListener('DOMContentLoaded', () => {
     const deleteButtons = document.querySelectorAll('.delete-btn');
     const deleteModal = document.getElementById('deleteModal');

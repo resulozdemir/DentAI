@@ -16,6 +16,7 @@ import uuid
 from dotenv import load_dotenv
 from functools import wraps
 
+
 # Google API İstemci Kütüphaneleri
 import google.oauth2.credentials
 import google.auth.transport.requests
@@ -31,8 +32,7 @@ app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1 MB dosya boyutu sınır�
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg'}
 
 password_reset_tokens = {}
-
-# Ensure the upload folder exists
+ 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'original'), exist_ok=True)
 os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'results'), exist_ok=True)
@@ -50,61 +50,82 @@ def get_db_session():
     with contextlib.closing(Session(engine)) as session:
         yield session
 
-# Gmail API Servisini Almak İçin Yardımcı Fonksiyon
+# Gmail API Servisini Almak İçin Yardımcı Fonksiyon (detaylı loglama ile)
 def get_gmail_service():
     """OAuth 2.0 kimlik bilgilerini kullanarak Gmail API servisini oluşturur ve döndürür."""
+    app.logger.info("=== Gmail API Servisi Başlatılıyor ===")
+    
     creds = None
     client_id = os.getenv('GOOGLE_CLIENT_ID')
     client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
     refresh_token = os.getenv('GOOGLE_REFRESH_TOKEN')
-    token_uri = 'https://oauth2.googleapis.com/token' # Google token endpoint
+    token_uri = 'https://oauth2.googleapis.com/token'
+    
+    # Kimlik bilgilerini detaylı kontrol et
+    app.logger.info(f"CLIENT_ID mevcut: {bool(client_id)} (uzunluk: {len(client_id) if client_id else 0})")
+    app.logger.info(f"CLIENT_SECRET mevcut: {bool(client_secret)} (uzunluk: {len(client_secret) if client_secret else 0})")
+    app.logger.info(f"REFRESH_TOKEN mevcut: {bool(refresh_token)} (uzunluk: {len(refresh_token) if refresh_token else 0})")
+    
+    if client_id:
+        app.logger.info(f"CLIENT_ID başlangıç: {client_id[:20]}...")
+    if client_secret:
+        app.logger.info(f"CLIENT_SECRET başlangıç: {client_secret[:15]}...")
+    if refresh_token:
+        app.logger.info(f"REFRESH_TOKEN başlangıç: {refresh_token[:30]}...")
 
     if not all([client_id, client_secret, refresh_token]):
-        app.logger.error("Google OAuth kimlik bilgileri .env dosyasında eksik.")
+        missing = []
+        if not client_id: missing.append("GOOGLE_CLIENT_ID")
+        if not client_secret: missing.append("GOOGLE_CLIENT_SECRET")  
+        if not refresh_token: missing.append("GOOGLE_REFRESH_TOKEN")
+        app.logger.error(f"Google OAuth kimlik bilgileri eksik: {', '.join(missing)}")
         return None
 
     try:
+        app.logger.info("Credentials nesnesi oluşturuluyor...")
         creds = google.oauth2.credentials.Credentials(
-            None, # Access token başlangıçta yok
+            None,  # Access token başlangıçta yok
             refresh_token=refresh_token,
             token_uri=token_uri,
             client_id=client_id,
             client_secret=client_secret,
-            scopes=['https://www.googleapis.com/auth/gmail.send'] # Kapsamı belirt
+            scopes=['https://www.googleapis.com/auth/gmail.send']
         )
-        app.logger.info("Credentials nesnesi başarıyla oluşturuldu.") 
+        app.logger.info("✅ Credentials nesnesi başarıyla oluşturuldu")
+
+        # Token durumunu kontrol et
+        app.logger.info(f"Token geçerli mi? {creds.valid}")
+        app.logger.info(f"Token süresi dolmuş mu? {creds.expired}")
+        app.logger.info(f"Refresh token mevcut mu? {bool(creds.refresh_token)}")
 
         # Token'ın geçerli olup olmadığını kontrol et, gerekirse yenile
         if not creds.valid:
-            app.logger.warning("Credentials nesnesi geçerli değil (not valid). Yenileme deneniyor...") 
-            if creds.refresh_token: # Yeni koşul: Geçerli değilse ve refresh token varsa yenilemeyi dene.
+            app.logger.warning("🟡 Credentials geçerli değil, yenileme deneniyor...")
+            if creds.refresh_token:
                 try:
-                    # Token'ı yenilemek için istek gönder
+                    app.logger.info("Token yenileme işlemi başlatılıyor...")
                     request = google.auth.transport.requests.Request()
                     creds.refresh(request)
-                    app.logger.info("Google OAuth token başarıyla yenilendi.")
-                except Exception as e:
-                    app.logger.error(f"Google OAuth token yenilenirken hata: {str(e)}")
-                    return None # Yenileme başarısız olursa None dön
+                    app.logger.info("✅ Google OAuth token başarıyla yenilendi")
+                except Exception as refresh_error:
+                    app.logger.error(f"❌ Token yenileme hatası: {str(refresh_error)}")
+                    app.logger.error(f"   Hata tipi: {type(refresh_error).__name__}")
+                    return None
             else:
-                # Geçerli refresh token yoksa veya başka bir sorun varsa
-                app.logger.error("Geçerli Google OAuth refresh token bulunamadı veya token geçersiz.")
-                # Ekstra loglama:
-                if not creds.refresh_token:
-                    app.logger.error("  Detay: Credentials nesnesi içindeki refresh_token None.")
-                elif not creds.expired:
-                     app.logger.error("  Detay: Credentials nesnesi geçerli değil (valid=False) AMA süresi dolmamış (expired=False).")
-                # --- Bitiş: Ekstra loglama
+                app.logger.error("❌ Refresh token bulunamadı")
                 return None
 
         # Gmail API servisini oluştur
-        app.logger.info("Gmail API servisi oluşturuluyor...") 
+        app.logger.info("Gmail API servisi oluşturuluyor...")
         service = googleapiclient.discovery.build('gmail', 'v1', credentials=creds)
-        app.logger.info("Gmail API servisi başarıyla oluşturuldu.") 
+        app.logger.info("✅ Gmail API servisi başarıyla oluşturuldu") 
         return service
 
     except Exception as e:
-        app.logger.error(f"Gmail servisi oluşturulurken hata: {str(e)}")
+        app.logger.error(f"❌ Gmail servisi oluşturulurken genel hata: {str(e)}")
+        app.logger.error(f"   Hata tipi: {type(e).__name__}")
+        import traceback
+        app.logger.error(f"   Stack trace: {traceback.format_exc()}")
         return None
 
 # Login Required Decorator
@@ -323,17 +344,17 @@ def analyze():
                 # TC No var, diğer bilgileri kontrol et
                 is_name_match = existing_patient.full_name.lower() == patient_info['name'].lower()
                 
-                # Yaş kontrolü (eğer her ikisi de dolu ise)
+                # Yaş kontrolü 
                 is_age_match = True
                 if patient_info['age'] and existing_patient.age:
                     is_age_match = int(patient_info['age']) == existing_patient.age
                 
-                # Cinsiyet kontrolü (eğer her ikisi de dolu ise)
+                # Cinsiyet kontrolü  
                 is_gender_match = True
                 if patient_info['gender'] and existing_patient.gender:
                     is_gender_match = patient_info['gender'] == existing_patient.gender
                 
-                # Doğum tarihi kontrolü (eğer her ikisi de dolu ise)
+                # Doğum tarihi kontrolü  
                 is_birth_date_match = True
                 if patient_info['birth_date'] and existing_patient.birth_date:
                     is_birth_date_match = patient_info['birth_date'] == existing_patient.birth_date
@@ -360,7 +381,7 @@ def analyze():
                     tc_no=patient_info['tc_no'],
                     full_name=patient_info['name'],
                     age=int(patient_info['age']) if patient_info['age'].isdigit() else None,
-                    birth_date=patient_info['birth_date'] if patient_info['birth_date'] else None, # Tarih boşsa None
+                    birth_date=patient_info['birth_date'] if patient_info['birth_date'] else None,  
                     gender=patient_info['gender'],
                     doctor_id=session['doctor_id']
                 )
@@ -408,9 +429,11 @@ def forgot_password():
              return redirect(url_for('index'))
 
         with get_db_session() as db:
+            # Önce girilen e-posta adresinin veritabanında kayıtlı olup olmadığını kontrol et
             doctor = db.query(Doctor).filter(Doctor.email == email).first()
 
             if doctor:
+                # E-posta veritabanında kayıtlı - şifre sıfırlama işlemini başlat
                 # Benzersiz bir jeton oluştur
                 reset_token = str(uuid.uuid4())
                 
@@ -420,11 +443,14 @@ def forgot_password():
                 reset_url = url_for('reset_password', token=reset_token, _external=True)
 
                 try:
+                    app.logger.info(f"=== E-posta gönderim süreci başlıyor: {email} ===")
                     service = get_gmail_service()
                     if not service:
+                        app.logger.error(f"Gmail servisi başlatılamadı - {email} için şifre sıfırlama isteği")
                         flash('E-posta gönderme servisi başlatılamadı. Lütfen sistem yöneticisiyle iletişime geçin.')
                         return redirect(url_for('index'))
 
+                    app.logger.info("E-posta mesajı hazırlanıyor...")
                     message = EmailMessage()
                     message['To'] = email
                     message['From'] = sender_email
@@ -444,8 +470,10 @@ Saygılarımızla,
 DentAI Ekibi
 '''
                     message.set_content(email_body)
+                    app.logger.info("E-posta içeriği hazırlandı")
 
                     # Mesajı base64 formatına kodla
+                    app.logger.info("E-posta base64'e kodlanıyor...")
                     encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
 
                     create_message = {
@@ -453,18 +481,22 @@ DentAI Ekibi
                     }
 
                     # Gmail API kullanarak mesajı gönder
+                    app.logger.info("Gmail API ile e-posta gönderiliyor...")
                     send_message = (service.users().messages().send(userId='me', body=create_message).execute())
-                    app.logger.info(f'Şifre sıfırlama e-postası {email} adresine gönderildi. Mesaj ID: {send_message["id"]}')
+                    app.logger.info(f'✅ Şifre sıfırlama e-postası {email} adresine gönderildi. Mesaj ID: {send_message["id"]}')
                     flash('Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.')
 
                 except Exception as e:
-                    app.logger.error(f"E-posta gönderilirken Gmail API hatası: {str(e)}")
-                    flash(f'E-posta gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.') # Genel hata mesajı
+                    app.logger.error(f"❌ E-posta gönderilirken Gmail API hatası: {str(e)}")
+                    app.logger.error(f"   Hata tipi: {type(e).__name__}")
+                    import traceback
+                    app.logger.error(f"   Stack trace: {traceback.format_exc()}")
+                    flash('E-posta gönderilirken bir hata oluştu. Lütfen sistem yöneticisiyle iletişime geçin.')
 
             else:
-                # Güvenlik için aynı mesajı göster (e-posta sistemde olmasa bile)
-                app.logger.warning(f"Şifre sıfırlama isteği başarısız: {email} adresi bulunamadı.")
-                flash('Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.')
+                # E-posta adresi veritabanında kayıtlı değil
+                app.logger.warning(f"Şifre sıfırlama isteği başarısız: {email} adresi sistemde kayıtlı değil.")
+                flash('Bu e-posta adresi sistemde kayıtlı değil. Lütfen kayıtlı e-posta adresinizi kullanın.')
 
         return redirect(url_for('index'))
 

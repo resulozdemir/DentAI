@@ -1,4 +1,5 @@
 /* static/css/main.css */
+/* Global değişkenler, butonlar, flaş mesajları ve ortak düzen (container) için temel stiller burada tanımlanmıştır. */
 :root {
     --primary-color: #ff7200;
     --primary-hover-color: #e56600;

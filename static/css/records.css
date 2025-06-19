@@ -1,4 +1,5 @@
 /* static/css/records.css */
+/* Bu stil dosyası geçmiş kayıtlar (previous_records) sayfasının kart tabanlı düzeni, silme modalı ve duyarlı ızgara yapısını tanımlar. */
 .header {
     display: flex;
     justify-content: space-between;

@@ -1,4 +1,5 @@
 /* static/css/results.css */
+/* Bu stil dosyası analiz sonuçları sayfasının koyu-tema arka planı, iki sütunlu içerik düzeni ve yazdırmaya uygun (print) medya kurallarını içerir. */
 
 body {
     background: linear-gradient(to right, #1a3a5f, #4a648c, #1a3a5f); 

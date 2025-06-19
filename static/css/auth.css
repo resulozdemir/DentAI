@@ -1,3 +1,5 @@
+/* static/css/auth.css */
+/* Bu stil dosyası kayıt, şifre yenileme ve şifre sıfırlama sayfalarının biçimlendirmesini içerir; formlar, uyarılar ve responsive düzenler burada tanımlanır. */
 .auth-page-container { 
     display: flex;
     justify-content: center;
