@@ -1,4 +1,4 @@
-# ISTUN - DentAI: Embedded Tooth Analysis Assistant
+# DentAI: Embedded Tooth Analysis Assistant
 
 This project is an AI-powered web application developed at **Istanbul Health and Technology University (ISTÜN)** to help dentists detect and analyse impacted teeth on panoramic X-ray images.
 
