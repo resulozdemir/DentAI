@@ -1,139 +1,157 @@
-# ISTÜN - DentAI: Gömülü Diş Analiz Asistanı
+# ISTUN - DentAI: Embedded Tooth Analysis Assistant
 
-Bu proje, İstanbul Sağlık ve Teknoloji Üniversitesi (İSTÜN) bünyesinde geliştirilmiş, diş hekimlerine panoramik diş röntgenleri üzerinde gömülü diş tespiti ve analizi konusunda yardımcı olmak amacıyla tasarlanmış yapay zeka destekli bir web uygulamasıdır. Uygulama, doktorların hasta bilgilerini girmesine, röntgen görüntülerini yüklemesine ve LandingAI platformu üzerinden eğitilmiş özel bir model aracılığıyla analiz sonuçları almasına olanak tanır.
+This project is an AI-powered web application developed at **Istanbul Health and Technology University (ISTÜN)** to help dentists detect and analyse impacted teeth on panoramic X-ray images.
 
-## Kullanılan Teknolojiler
+The application allows doctors to enter patient information, upload X-ray images and receive analysis results from a custom model trained on the **LandingAI** platform.
 
-*   **Backend:** Python, Flask
-*   **Veritabanı:** PostgreSQL
-*   **ORM:** SQLAlchemy
-*   **Yapay Zeka Analizi:** LandingAI Platformu
-*   **Frontend:** HTML, CSS, JavaScript (Temel)
-*   **Kimlik Doğrulama (Şifre Sıfırlama):** Google OAuth 2.0 (Gmail API)
-*   **Ortam Değişkenleri:** python-dotenv
-*   **Şifreleme:** Werkzeug
+---
 
-## Özellikler
+## Tech Stack 🛠️
 
-*   **Kullanıcı Yönetimi:**
-    *   Doktorlar için güvenli kayıt ve giriş sistemi.
-    *   Şifre hashleme ile güvenli şifre saklama.
-    *   E-posta ile şifre sıfırlama (Google OAuth ve Gmail API entegrasyonu).
-    *   Oturum yönetimi ve yetkilendirme (`@login_required` decorator).
-*   **Hasta Yönetimi:**
-    *   Yeni hasta bilgilerini (TC No, Ad Soyad, Yaş, Doğum Tarihi, Cinsiyet) kaydetme formu.
-    *   Mevcut hastaların otomatik olarak tanınması.
-*   **X-Ray Analizi:**
-    *   Röntgen görüntüsü yükleme.
-    *   Yüklenen orijinal görüntünün saklanması (`uploads/original`).
-    *   LandingAI servisi üzerinden eğitilmiş model ile görüntü analizi.
-    *   Analiz sonucunda gömülü dişlerin türü, adeti ve konumunun (sağ/sol) belirlenmesi.
-    *   Analiz edilmiş, üzerine işaretlemeler yapılmış sonucun görsel olarak oluşturulması ve saklanması (`uploads/results`).
-*   **Sonuç Gösterimi:**
-    *   Hasta bilgileri, yüklenen orijinal röntgen ve analiz edilmiş (işaretlenmiş) röntgenin yan yana gösterimi.
-    *   Tespit edilen diş sayısı, türleri ve konumlarının açıkça belirtilmesi.
-    *   Detaylı analiz sonuçlarının listelenmesi.
-*   **Kayıt Geçmişi:**
-    *   Giriş yapmış doktora ait tüm hastaların geçmiş analiz kayıtlarının listelenmesi.
-    *   Kayıtların tarih sırasına göre (en yeni üstte) gösterimi.
-    *   İstenilen kaydın (veritabanı kaydı ve ilgili dosyalar) güvenli bir şekilde silinmesi.
-*   **Diğer:**
-    *   Proje ve ekip hakkında bilgi veren "Hakkımızda" sayfası.
+* **Backend:** Python, Flask  
+* **Database:** PostgreSQL  
+* **ORM:** SQLAlchemy  
+* **AI Inference:** LandingAI platform  
+* **Frontend:** HTML, CSS, Vanilla JS  
+* **Auth / Password Reset:** Google OAuth 2.0 (Gmail API)  
+* **Environment Variables:** python-dotenv  
+* **Password Hashing:** Werkzeug
 
-## Proje Yapısı
+---
+
+## Features
+
+### 👤 User Management
+* Secure sign-up & login for dentists.  
+* Passwords stored with hashing.  
+* Password-reset via e-mail (Google OAuth + Gmail API).  
+* Session management & route protection (`@login_required`).
+
+### 🧑‍⚕️ Patient Management
+* Form to register new patients (ID No, name, age, birth date, gender).  
+* Automatic recognition of existing patients.
+
+### 🦷 X-Ray Analysis
+* Upload panoramic X-ray.  
+* Original image stored under `uploads/original`.  
+* Image sent to LandingAI endpoint for inference.  
+* Model returns tooth type, count and position (left/right).  
+* Result image with bounding boxes generated and saved under `uploads/results`.
+
+### 📊 Result Display
+* Side-by-side view of patient data, original X-ray and annotated X-ray.  
+* Clear listing of detected teeth (type, count, position).  
+* Detailed analysis table.
+
+### 🗂️ Record History
+* Logged-in doctor can view all previous analyses.  
+* Sorted by newest first.  
+* Secure deletion of a record (DB row + files).
+
+### ℹ️ Other Pages
+* "About Us" page describing project & team.
+
+---
+
+## Project Structure
 
 ```
 .
-├── app.py                  # Ana Flask uygulaması (Routes, View Fonksiyonları, AI Entegrasyonu)
-├── database.py             # SQLAlchemy modelleri ve veritabanı bağlantı ayarları
-├── setup_db.py             # Veritabanını ve tabloları ilk kez oluşturma betiği (Manuel Çalıştırılır)
-├── requirements.txt        # Gerekli Python kütüphaneleri
-├── .env                    # Ortam değişkenleri (Veritabanı, Mail/OAuth bilgileri - GİZLİ)
-├── README.md               # Bu dosya
-├── static/                 # Statik dosyalar (CSS, JavaScript, Resimler)
-│   ├── css/                # CSS stil dosyaları
-│   ├── js/                 # JavaScript dosyaları
-│   └── images/             # Arayüzde kullanılan resimler (logo, arka plan vb.)
-├── templates/              # HTML şablonları (Jinja2)
-│   ├── base.html           # Ana şablon (Header, Footer, Flash mesajlar)
-│   ├── index.html          # Giriş (Login) sayfası
-│   ├── register.html       # Doktor kayıt sayfası
-│   ├── forgot_password.html # Şifremi unuttum sayfası
-│   ├── reset_password.html  # Şifre sıfırlama sayfası
-│   ├── patient_form.html   # Hasta bilgi giriş ve röntgen yükleme formu
-│   ├── results.html        # Analiz sonuçlarının gösterildiği sayfa
-│   ├── previous_records.html # Geçmiş kayıtların listelendiği sayfa
-│   └── about.html          # Hakkımızda sayfası
-└── uploads/                # Kullanıcı tarafından yüklenen dosyaların saklandığı yer
-    ├── original/           # Yüklenen orijinal röntgen görüntüleri
-    └── results/            # Analiz sonucu oluşturulan işaretlenmiş görüntüler
+├── app.py                  # Main Flask app (routes, AI integration)
+├── database.py             # SQLAlchemy models & DB config
+├── setup_db.py             # Script to create DB/tables (run once)
+├── requirements.txt        # Python dependencies
+├── .env                    # Environment variables (DB, mail/OAuth) – SECRET
+├── static/                 # CSS, JS, images
+│   ├── css/
+│   ├── js/
+│   └── images/
+├── templates/              # Jinja2 HTML templates
+│   ├── base.html
+│   ├── index.html           # Login
+│   ├── register.html        # Doctor sign-up
+│   ├── forgot_password.html
+│   ├── reset_password.html
+│   ├── patient_form.html    # Patient details + X-ray upload
+│   ├── results.html         # Analysis results page
+│   ├── previous_records.html
+│   └── about.html
+└── uploads/
+    ├── original/           # Raw uploaded images
+    └── results/            # Annotated result images
 ```
 
-## Kurulum
+---
 
-1.  **Depoyu Klonlayın:**
-    ```bash
-    git clone <repository_url>
-    cd BitirmeProjesiWEB
-    ```
-2.  **Sanal Ortam Oluşturun ve Aktifleştirin (Önerilir):**
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate  # macOS/Linux için
-    # venv\Scripts\activate  # Windows için
-    ```
-3.  **Gerekli Paketleri Yükleyin:**
-    ```bash
-    python3 -m pip install -r requirements.txt
-    ```
-4.  **PostgreSQL Kurulumu:**
-    *   Sisteminizde PostgreSQL veritabanı sunucusunun kurulu ve çalışır olduğundan emin olun.
-5.  **.env Dosyasını Yapılandırın:**
-    *   Proje ana dizininde `.env` adında bir dosya oluşturun.
-    *   Aşağıdaki değişkenleri kendi PostgreSQL ve Google OAuth 2.0 bilgilerinizle doldurun:
-        ```dotenv
-        DB_USER=postgres_kullanici_adiniz
-        DB_PASSWORD=postgres_sifreniz
-        DB_HOST=localhost # veya veritabanı sunucu adresiniz
-        DB_PORT=5432
-        DB_NAME=dentai_db # veya istediğiniz bir veritabanı adı
+## Setup 🚀
 
-        # Gmail API için Google Cloud Console'dan alınan OAuth bilgileri
-        GOOGLE_CLIENT_ID=xxxxxxxxxxxx.apps.googleusercontent.com
-        GOOGLE_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxx
-        GOOGLE_REFRESH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        MAIL_USERNAME=sizin_gmail_adresiniz@gmail.com # E-postaların gönderileceği adres
-        ```
-    *   **Önemli:** Google OAuth bilgilerini almak için Google Cloud Console'da bir proje oluşturmalı, Gmail API'yi etkinleştirmeli ve bir OAuth 2.0 İstemci Kimliği (Web uygulaması türünde) oluşturmalısınız. Yetkilendirilmiş yönlendirme URI'si olarak `https://developers.google.com/oauthplayground` eklemeyi unutmayın. Refresh Token'ı Google OAuth Playground kullanarak alabilirsiniz. `MAIL_USERNAME`'in OAuth iznini aldığınız hesapla aynı olması gerekir.
-6.  **Veritabanını ve Tabloları Oluşturun:**
-    *   Aşağıdaki komutu çalıştırarak `.env` dosyasındaki `DB_NAME` ile belirtilen veritabanını ve `database.py` içindeki tabloları oluşturun:
-    ```bash
-    python setup_db.py
-    ```
-    *   Eğer veritabanı zaten varsa, betik size silip yeniden oluşturmayı soracaktır.
+1. **Clone the repo**
+   ```bash
+   git clone <repository_url>
+   cd DentAI
+   ```
+2. **(Optional) Create & activate a virtualenv**
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # macOS/Linux
+   # venv\Scripts\activate  # Windows
+   ```
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. **Install PostgreSQL** and make sure the server is running.
+5. **Configure `.env`**
+   ```dotenv
+   DB_USER=your_pg_user
+   DB_PASSWORD=your_pg_password
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_NAME=dentai_db
 
-## Uygulamayı Çalıştırma
+   # Gmail API (Google Cloud Console)
+   GOOGLE_CLIENT_ID=xxxxxxxx.apps.googleusercontent.com
+   GOOGLE_CLIENT_SECRET=xxxxxxxxxxxxxxxx
+   GOOGLE_REFRESH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxx
+   MAIL_USERNAME=your_gmail@gmail.com
+   ```
+   *Create a Google Cloud project, enable Gmail API, generate OAuth credentials and obtain a refresh token via OAuth Playground.*
+6. **Initialise the DB**
+   ```bash
+   python setup_db.py
+   ```
 
-1.  Proje ana dizinindeyken ve sanal ortam aktifken aşağıdaki komutu çalıştırın:
-    ```bash
-    python app.py
-    ```
-2.  Uygulama varsayılan olarak `http://127.0.0.1:5001` adresinde çalışacaktır. Tarayıcınızda bu adrese gidin.
+---
 
-## Kullanım Akışı
+## Running the App
 
-1.  İlk kullanımda "KAYIT OL" bağlantısı ile bir doktor hesabı oluşturun.
-2.  Oluşturduğunuz kullanıcı adı ve şifre ile giriş yapın (`index.html`).
-3.  Giriş yaptıktan sonra hasta bilgi formuna (`patient_form.html`) yönlendirilirsiniz.
-4.  Hastanın bilgilerini girin ve panoramik röntgen dosyasını seçin.
-5.  "Analiz Et" (veya benzeri) butonuna tıklayarak görüntüyü yükleyin ve analizi başlatın.
-6.  Analiz tamamlandığında sonuç sayfasına (`results.html`) yönlendirilirsiniz. Burada hasta bilgileri, orijinal ve işaretlenmiş röntgen ile analiz detaylarını (diş sayısı, türü, konumu) görürsünüz.
-7.  Navigasyon menüsündeki "Geçmiş Kayıtlar" linki ile daha önceki analizlerinizi (`previous_records.html`) listeleyebilir ve istemediklerinizi silebilirsiniz.
-8.  Şifrenizi unutursanız, giriş sayfasındaki "ŞİFREMİ UNUTTUM" bağlantısını kullanabilirsiniz.
-9.  İşiniz bittiğinde "Çıkış Yap" linki ile oturumu sonlandırabilirsiniz.
+```bash
+python app.py
+```
+The server runs at `http://127.0.0.1:5001` by default.
 
-## Notlar
+---
 
-*   Bu uygulama, analiz için harici bir servis olan **LandingAI**'ye bağımlıdır. LandingAI API anahtarınızın (`API_KEY`) ve Endpoint ID'nizin (`ENDPOINT_ID`) `app.py` içinde doğru şekilde tanımlanmış olması gerekir.
-*   Şifre sıfırlama özelliği **Google OAuth 2.0** ve **Gmail API** kullanır. `.env` dosyasındaki ilgili kimlik bilgilerinin doğru ve geçerli olması şarttır.
+## Typical Workflow
+
+1. Sign up a doctor account → log in.  
+2. Fill patient form & upload X-ray.  
+3. Click **Analyse** → wait for results.  
+4. View annotated image & details.  
+5. Browse **Previous Records** for history.  
+6. Use **Forgot Password** if needed.  
+7. Log out when done.
+
+---
+
+## Notes
+
+* Analysis relies on an external **LandingAI** endpoint – ensure `API_KEY` and `ENDPOINT_ID` are set inside `app.py` or `.env`.
+* Password reset uses Gmail OAuth 2.0 – credentials must be valid.
+
+---
+
+## License
+
+This project is for academic purposes at ISTÜN. All rights reserved.
 
